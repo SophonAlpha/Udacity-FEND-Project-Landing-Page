@@ -3,6 +3,7 @@ function main() {
     for (let menuItem of menu.children) {
         menuItem.addEventListener('click', menuItemClick);
     }
+    document.getElementById('menu-icon').addEventListener('click', menuItemClick);
 }
 
 function menuItemClick(elem) {

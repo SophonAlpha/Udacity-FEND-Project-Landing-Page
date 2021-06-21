@@ -1,3 +1,10 @@
+/*
+TODO:
+ - Get width of menu items and adjust @media dynamically.
+
+
+*/
+
 function main() {
     const menu = document.getElementById('menu');
     for (let menuItem of menu.children) {

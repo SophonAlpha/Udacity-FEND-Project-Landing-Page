@@ -46,6 +46,7 @@ Research notes:
   <link
     href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined"
     rel="stylesheet">
+
   <script src="js/app.js"></script>
 
 </head>
@@ -59,11 +60,11 @@ Research notes:
       <nav>
         <!-- Menu is visible when screen wide enough. Controlled with @media. -->
         <ul id="menu-horiz" class="header-top__menu">
-          <li id="menu-horiz-item-1" class="header__menu-item">Welcome</li>
-          <li id="menu-horiz-item-2" class="header__menu-item">Our Stores</li>
-          <li id="menu-horiz-item-3" class="header__menu-item">Home Delivery</li>
-          <li id="menu-horiz-item-4" class="header__menu-item">Products</li>
-          <li id="menu-horiz-item-5" class="header__menu-item">Contact</li>
+          <li id="menu-horiz-item-1" data-section-id="section-1" class="header__menu-item">Welcome</li>
+          <li id="menu-horiz-item-2" data-section-id="section-2" class="header__menu-item">Our Stores</li>
+          <li id="menu-horiz-item-3" data-section-id="section-3" class="header__menu-item">Home Delivery</li>
+          <li id="menu-horiz-item-4" data-section-id="section-4" class="header__menu-item">Products</li>
+          <li id="menu-horiz-item-5" data-section-id="section-5" class="header__menu-item">Contact</li>
         </ul>
         <!-- On narrow screens show menu icon. -->
         <div class="header-top__menu-icon">
@@ -71,15 +72,15 @@ Research notes:
         </div>
       </nav>
     </div>
-    <div class="header-bottom">
+    <!-- Vertical menu. Shown at narrow widths.-->
+    <div id="header-bottom" class="header-bottom--collapsed">
       <nav>
-        <!-- Menu is visible when screen wide enough. Controlled with @media. -->
         <ul id="menu-vert" class="header-bottom__menu">
-          <li id="menu-vert-item-1" class="header__menu-item">Welcome</li>
-          <li id="menu-vert-item-2" class="header__menu-item">Our Stores</li>
-          <li id="menu-vert-item-3" class="header__menu-item">Home Delivery</li>
-          <li id="menu-vert-item-4" class="header__menu-item">Products</li>
-          <li id="menu-vert-item-5" class="header__menu-item">Contact</li>
+          <li id="menu-vert-item-1" data-section-id="section-1" class="header__menu-item">Welcome</li>
+          <li id="menu-vert-item-2" data-section-id="section-2" class="header__menu-item">Our Stores</li>
+          <li id="menu-vert-item-3" data-section-id="section-3" class="header__menu-item">Home Delivery</li>
+          <li id="menu-vert-item-4" data-section-id="section-4" class="header__menu-item">Products</li>
+          <li id="menu-vert-item-5" data-section-id="section-5" class="header__menu-item">Contact</li>
         </ul>
       </nav>
     </div>

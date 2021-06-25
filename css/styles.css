@@ -35,11 +35,22 @@
   cursor: pointer;
 }
 
-.header-bottom {
+.header-bottom--expanded {
   display: flex;
   overflow: hidden;
   justify-content: flex-end;
   background-color: black;
+  height: 9em;
+  transition: height 0.3s;
+}
+
+.header-bottom--collapsed {
+  display: flex;
+  overflow: hidden;
+  justify-content: flex-end;
+  background-color: black;
+  height: 0;
+  transition: height 0.3s;
 }
 
 .header-bottom__menu {
@@ -72,9 +83,6 @@
     display: flex;
   }
   .header-top__menu-icon {
-    display: none;
-  }
-  .header-bottom {
     display: none;
   }
 }

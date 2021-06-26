@@ -16,15 +16,18 @@ function main() {
     // Respond to media queries for window resizing.
     window.matchMedia('(min-width: 950px)').addEventListener('change', toggleVerticalMenu);
     toggleVerticalMenu();
+    // Scroll to top section.
+    const sections = document.getElementById("sections");
+    sections.scrollIntoView();
 }
 
-function menuItemClick(elem) {
+function menuItemClick(event) {
     const section = document.getElementById(
         document
-            .getElementById(elem.target.id)
+            .getElementById(event.target.id)
             .getAttribute('data-section-id')
     );
-    section.scrollIntoView({behavior: 'smooth'});
+    section.scrollIntoView({behavior: "smooth"});
 }
 
 function toggleVerticalMenu() {

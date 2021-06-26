@@ -1,3 +1,20 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.landing-page {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.header-box {
+  flex-grow: 0;
+  flex-basis: auto;
+}
+
 .header-top {
   display: flex;
   flex-direction: row;
@@ -40,7 +57,7 @@
   overflow: hidden;
   justify-content: flex-end;
   background-color: black;
-  height: 9em;
+  height: 12em;
   transition: height 0.3s;
 }
 
@@ -67,7 +84,7 @@
 .header__menu-item {
   display: flex;
   align-items: center;
-  padding: 0.2em 1em 0.2em;
+  padding: 0.5em 1em 0.5em;
   white-space: nowrap;
   font-family: 'Nunito', sans-serif;
   color: darkgray;
@@ -85,6 +102,12 @@
   .header-top__menu-icon {
     display: none;
   }
+}
+
+.content-box {
+  flex-grow: 0;
+  flex-basis: auto;
+  overflow: auto;
 }
 
 .section {

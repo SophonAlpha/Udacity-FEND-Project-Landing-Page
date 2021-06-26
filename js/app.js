@@ -1,14 +1,15 @@
-/*
-TODO:
- - Get width of menu items and adjust @media dynamically.
-*/
+let activeMenuItemText = null;
 
 function main() {
     // Attach event function to all menu items.
     for (let menuId of ['menu-horiz', 'menu-vert']) {
         const menu = document.getElementById(menuId);
+        // Underline first menu entry.
+        setUnderline(menu.children[0]);
         for (let menuItem of menu.children) {
-            menuItem.addEventListener('click', menuItemClick);
+            menuItem.addEventListener('click', function() {
+                menuItemClick(menuItem.id);
+            });
         }
     }
     // Attach event function to menu icon (visible on narrow screens).
@@ -21,10 +22,30 @@ function main() {
     sections.scrollIntoView();
 }
 
-function menuItemClick(event) {
+function setUnderline(menuItem) {
+    const menuItemText = document.getElementById(menuItem.id + "-text");
+    // Remove underline from current menu item.
+    if (activeMenuItemText) {
+        if (activeMenuItemText.classList.contains("underlined")) {
+            activeMenuItemText.classList.remove("underlined");
+        }
+        if (activeMenuItemText.classList.contains("underline-anchor")) {
+            activeMenuItemText.classList.remove("underline-anchor");
+        }
+    }
+    // Add underline to active menu item.
+    menuItemText.classList.add("underlined");
+    console.log(menuItemText);
+    menuItemText.classList.add("underline-anchor");
+    // Save active item as current item.
+    activeMenuItemText = menuItemText;
+}
+
+function menuItemClick(menuItemId) {
+    console.log(menuItemId);
     const section = document.getElementById(
         document
-            .getElementById(event.target.id)
+            .getElementById(menuItemId)
             .getAttribute('data-section-id')
     );
     section.scrollIntoView({behavior: "smooth"});
@@ -33,17 +54,12 @@ function menuItemClick(event) {
 function toggleVerticalMenu() {
     // Toggle the vertical menu whenever a media query resize event fires.
     const headerBottom = document.querySelector('#header-bottom');
-    headerBottom.classList.replace('header-bottom--expanded',
-    'header-bottom--collapsed');
+    headerBottom.classList.add('collapsed');
 }
 
 function menuIconClick(elem) {
     const headerBottom = document.querySelector('#header-bottom');
-    if (!(headerBottom.classList.replace('header-bottom--expanded',
-        'header-bottom--collapsed'))) {
-        headerBottom.classList.replace('header-bottom--collapsed',
-            'header-bottom--expanded')
-    }
+    headerBottom.classList.toggle('collapsed');
 }
 
 document.addEventListener('DOMContentLoaded', main);

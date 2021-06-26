@@ -52,7 +52,7 @@ body {
   cursor: pointer;
 }
 
-.header-bottom--expanded {
+.header-bottom {
   display: flex;
   overflow: hidden;
   justify-content: flex-end;
@@ -61,11 +61,7 @@ body {
   transition: height 0.3s;
 }
 
-.header-bottom--collapsed {
-  display: flex;
-  overflow: hidden;
-  justify-content: flex-end;
-  background-color: black;
+.collapsed {
   height: 0;
   transition: height 0.3s;
 }
@@ -95,6 +91,19 @@ body {
   cursor: pointer;
 }
 
+.underline-anchor {
+  position: relative;
+}
+
+.underlined::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  bottom: -5px;
+  background-color: orange;
+}
+
 @media screen and (min-width: 950px) {
   .header-top__menu {
     display: flex;
@@ -111,7 +120,7 @@ body {
 }
 
 .section {
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;

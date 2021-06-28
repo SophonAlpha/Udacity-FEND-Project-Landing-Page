@@ -7,58 +7,62 @@ class Menu {
     }
 
     initialise(menuIds) {
+        let menuItems = [];
         for (let menuId of menuIds) {
             const menu = document.getElementById(menuId);
-            this.activeMenuItems.push(menu.children[0]);
+            menuItems.push(menu.children[0]);
         }
-        // Underline first menu entry.
-        this.setUnderline(this.activeMenuItems);
+        // Underline first menu entry in horizontal and vertical menus.
+        this.setUnderline(menuItems);
     }
 
     menuItemClick(event) {
-        let section = null;
-        let menuItemIds = null
+        let sectionId = null;
+        let menuItemIds = null;
         let elem = event.target;
+        let menuItems = [];
+        // Traverse up the DOM tree to find which menu item was clicked
         while (!(elem === null) && !(elem.tagName === "BODY")) {
             if (elem.hasAttribute('data-section-id')) {
-                section = elem.getAttribute('data-section-id');
+                sectionId = elem.getAttribute('data-section-id');
                 menuItemIds = elem.getAttribute('data-menu-items');
                 break;
             }
             elem = elem.parentNode;
         }
-        console.log("Section = " + section);
-        console.log("Menu items = " + this.activeMenuItems);
+        // Get the Ids of the horizontal and vertical menu item.
+        if (menuItemIds) {
+            for (let menuItemId of menuItemIds.split(" ")) {
+                menuItems.push(document.getElementById(menuItemId));
+            }
+            // Scroll
+            document.getElementById(sectionId).scrollIntoView({behavior: "smooth"});
+            // Set underline at menu item in horizontal and vertical menus.
+            this.setUnderline(menuItems);
+        }
     }
 
-
-    // menuItemClick(menuItem) {
-    //     // const menuItem = document.getElementById(menuItemId);
-    //     const section = document.getElementById(
-    //         menuItem.getAttribute('data-section-id')
-    //     );
-    //     section.scrollIntoView({behavior: "smooth"});
-    //     this.setUnderline(menuItem);
-    // }
-
-    setUnderline(selectedMenuItems) {
-        for (let selectedMenuItem of selectedMenuItems) {
-            const menuItemText = document.getElementById(selectedMenuItem.id + "-text");
-            // Remove underline from active menu item.
-            if (this.activeMenuItems) {
-                if (this.activeMenuItems.classList.contains("underlined")) {
-                    this.activeMenuItems.classList.remove("underlined");
+    setUnderline(menuItems) {
+        // Remove underline from active menu item.
+        if (!(this.activeMenuItems === undefined || this.activeMenuItems.length === 0)) {
+            while (this.activeMenuItems.length > 0) {
+                let activeMenuItem = this.activeMenuItems.pop();
+                if (activeMenuItem.classList.contains("underlined")) {
+                    activeMenuItem.classList.remove("underlined");
                 }
-                if (this.activeMenuItems.classList.contains("underline-anchor")) {
-                    this.activeMenuItems.classList.remove("underline-anchor");
+                if (activeMenuItem.classList.contains("underline-anchor")) {
+                    activeMenuItem.classList.remove("underline-anchor");
                 }
             }
-            // Add underline to selected menu item.
+        }
+        // Add underline to selected menu items.
+        for (let menuItem of menuItems) {
+            const menuItemText = document.getElementById(menuItem.id + "-text");
             menuItemText.classList.add("underlined");
             menuItemText.classList.add("underline-anchor");
+            // Save selected item as active item.
+            this.activeMenuItems.push(menuItemText);
         }
-        // Save selected item as active item.
-        this.activeMenuItems = selectedMenuItems;
     }
 
 }
@@ -79,29 +83,6 @@ function main() {
     const sections = document.getElementById("sections");
     sections.scrollIntoView();
 }
-
-// function initMenus(menuHorizId, menuVertId) {
-//     const menuHoriz = document.getElementById(menuHorizId);
-//     const menuVert = document.getElementById(menuVertId);
-//     const mapHorizToVert = {};
-//     const mapVertToHoriz = {};
-//     for (let i = 0; i < menuHoriz.children.length; i++) {
-//         mapHorizToVert[menuHoriz.children[i].id] = menuVert.children[i];
-//         mapVertToHoriz[menuVert.children[i].id] = menuHoriz.children[i];
-//     }
-//     mapHorizToVert["active"] =
-//
-//         // Underline first menu entry.
-//         this.setUnderline(menu.children[0]);
-//         // Attach event handler.
-//         for (let menuItem of menu.children) {
-//             const instance = this;
-//             menuItem.addEventListener('click', function () {
-//                 instance.menuItemClick(menuItem);
-//             });
-//         }
-//
-// }
 
 function toggleVerticalMenu() {
     // Toggle the vertical menu whenever a media query resize event fires.

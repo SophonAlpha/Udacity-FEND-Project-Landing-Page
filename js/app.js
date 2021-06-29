@@ -1,7 +1,6 @@
 class Menu {
 
     constructor(menuIds) {
-        // this.instance = this;
         this.activeMenuItems = [];
         this.initialise(menuIds);
     }
@@ -30,7 +29,7 @@ class Menu {
             }
             elem = elem.parentNode;
         }
-        // Get the Ids of the horizontal and vertical menu item.
+        // Get the IDs of the selected item in horizontal and vertical menus.
         if (menuItemIds) {
             for (let menuItemId of menuItemIds.split(" ")) {
                 menuItems.push(document.getElementById(menuItemId));
@@ -75,13 +74,28 @@ function main() {
     // Attach event function to menu icon (visible on narrow screens).
     document.getElementById('menu-icon')
         .addEventListener('click', menuIconClick);
-    // Respond to media queries for window resizing.
+    // Set up the intersection observer to detect when a section moves into view.
+    const observer = new IntersectionObserver(sectionIsVisible, {
+        root: document.getElementById("sections"),
+        threshold: Array.from(range(0, 1, 0.1)),
+    })
+    observer.observe(document.getElementById("section-1"));
+    observer.observe(document.getElementById("section-2"));
+    observer.observe(document.getElementById("section-3"));
+    observer.observe(document.getElementById("section-4"));
+    // Set up respons to media queries for window resizing.
     window.matchMedia('(min-width: 950px)')
         .addEventListener('change', toggleVerticalMenu);
     toggleVerticalMenu();
     // Scroll to top section.
     const sections = document.getElementById("sections");
     sections.scrollIntoView();
+}
+
+function* range(start, stop, step) {
+    for (let x = start; x <= stop; x = x + step) {
+        yield x;
+    }
 }
 
 function toggleVerticalMenu() {
@@ -93,6 +107,29 @@ function toggleVerticalMenu() {
 function menuIconClick(elem) {
     const headerBottom = document.querySelector('#header-bottom');
     headerBottom.classList.toggle('collapsed');
+}
+
+// TODO:
+// - Intersection Observer API
+//   https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+
+function sectionIsVisible(entries, observer) {
+    const viewWindow = document.getElementById("sections");
+    const viewWindowTop = viewWindow.getBoundingClientRect().top;
+    const viewWindowHeight = viewWindow.getBoundingClientRect().height;
+    const viewWindowMiddle = viewWindowHeight / 2;
+
+    let sections = {};
+    entries.forEach(entry => {
+        let section = document.getElementById(entry.target.id);
+        let distance = viewWindowMiddle - section.getBoundingClientRect().top;
+        console.log(section.id + " = " + distance);
+        // if (distance >= 0 ) {
+        //     console.log(section.id + " = " + distance);
+        // }
+    })
+    // Object.keys(a).sort().reduce(function (entry, key) {entry[key] = a[key]; return entry;}, {});
+    console.log("---------------------------------");
 }
 
 document.addEventListener('DOMContentLoaded', main);

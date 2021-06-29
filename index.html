@@ -1,29 +1,14 @@
 <!--
-Questions:
-----------
-
-"the section that is active in the viewport/closest to the top should be distinguished from the
-other sections" - Should the section be distinguished or the navigation item for the section?
-
-Design:
--------
-
-- navigation on top: maybe logo, "Staywell Pharmacy", navigation items right aligned
-- navigation stays on top
-- Sections: Welcome with call to action to subscribe to news letter,
 
 Research notes:
 ---------------
 
 - Highlight Current Page With HTML CSS JS | Show Active Link Or Menu
   https://webdevtrick.com/highlight-current-page/
-- Highlight Active Menu Based On The Scroll Position – active-menu-link
-  https://www.cssscript.com/scroll-active-menu/
-- Google Fonts
-  https://fonts.google.com/
 - A Complete Guide to Flexbox
   https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-
+- Intersection Observer API
+  https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
 
 -->
 
@@ -135,7 +120,7 @@ Research notes:
     <div id="sections" class="content-box">
 
       <div>
-        <section id="section-1" class="section">
+        <section id="section-1" class="section debug-border--blue">
           <div class="section-content">
             <h1 class="section__heading">Welcome to StayWell Pharmacy</h1>
             <p>Elementum litora montes malesuada dictum placerat penatibus feugiat facilisis lectus,
@@ -160,7 +145,7 @@ Research notes:
           </div>
         </section>
 
-        <section id="section-2" class="section">
+        <section id="section-2" class="section debug-border--blue">
           <div class="section-content">
             <h1 class="section__heading">Our Stores</h1>
             <p>Elementum litora montes malesuada dictum placerat penatibus feugiat facilisis lectus, nulla
@@ -180,7 +165,7 @@ Research notes:
           </div>
         </section>
 
-        <section id="section-3" class="section">
+        <section id="section-3" class="section debug-border--blue">
           <div class="section-content">
             <h1 class="section__heading">Home Delivery</h1>
             <p>Elementum litora montes malesuada dictum placerat penatibus feugiat facilisis lectus, nulla
@@ -200,7 +185,7 @@ Research notes:
           </div>
         </section>
 
-        <section id="section-4" class="section">
+        <section id="section-4" class="section debug-border--blue">
           <div class="section-content">
             <h1 class="section__heading">Products</h1>
             <p>Elementum litora montes malesuada dictum placerat penatibus feugiat facilisis lectus, nulla
@@ -220,7 +205,7 @@ Research notes:
           </div>
         </section>
 
-        <section id="section-5" class="section">
+        <section id="section-5" class="section debug-border--blue">
           <div class="section-content">
             <h1 class="section__heading">Contact</h1>
             <p>Elementum litora montes malesuada dictum placerat penatibus feugiat facilisis lectus, nulla
@@ -240,10 +225,6 @@ Research notes:
           </div>
         </section>
       </div>
-
-      <footer>
-        Some Footer
-      </footer>
 
     </div>
 

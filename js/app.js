@@ -1,28 +1,31 @@
 let state = {
     activeMenuItems: [],
+    lastScrollPos: 0,
+    isScrolling: null,
+    sectionsElem: null,
+    scrollStartedByMenuClick: false,
 }
 
 function main() {
+
     // Initialise horizontal and vertical menus.
     menuInitialise(['menu-horiz', 'menu-vert']);
     document.getElementById("header-box")
         .addEventListener('click', menuItemClick);
+
     // Attach event function to menu icon (visible on narrow screens).
     document.getElementById('menu-icon')
         .addEventListener('click', menuIconClick);
-    // Set up the intersection observer to detect when a section moves into view.
-    const observer = new IntersectionObserver(sectionIsVisible, {
-        root: document.getElementById("sections"),
-        threshold: Array.from(range(0, 1, 0.1)),
-    })
-    observer.observe(document.getElementById("section-1"));
-    observer.observe(document.getElementById("section-2"));
-    observer.observe(document.getElementById("section-3"));
-    observer.observe(document.getElementById("section-4"));
+
+    // Attach scroll event handler.
+    state.sectionsElem = document.getElementById("sections");
+    state.sectionsElem.addEventListener("scroll", scroll);
+
     // Set up response to media queries for window resizing.
     window.matchMedia('(min-width: 950px)')
         .addEventListener('change', toggleVerticalMenu);
     toggleVerticalMenu();
+
     // Scroll to top section.
     const sections = document.getElementById("sections");
     sections.scrollIntoView();
@@ -43,7 +46,8 @@ function menuItemClick(event) {
     let menuItemIds = null;
     let elem = event.target;
     let menuItems = [];
-    // Traverse up the DOM tree to find which menu item was clicked
+
+    // Traverse up the DOM tree to find the menu item clicked.
     while (!(elem === null) && !(elem.tagName === "BODY")) {
         if (elem.hasAttribute('data-section-id')) {
             sectionId = elem.getAttribute('data-section-id');
@@ -52,12 +56,14 @@ function menuItemClick(event) {
         }
         elem = elem.parentNode;
     }
+
     // Get the IDs of the selected item in horizontal and vertical menus.
     if (menuItemIds) {
         for (let menuItemId of menuItemIds.split(" ")) {
             menuItems.push(document.getElementById(menuItemId));
         }
         // Scroll to selected section.
+        state.scrollStartedByMenuClick = true;
         document.getElementById(sectionId).scrollIntoView({behavior: "smooth"});
         // Set underline at menu item in horizontal and vertical menus.
         menuSetUnderline(menuItems);
@@ -104,33 +110,50 @@ function menuIconClick(elem) {
     headerBottom.classList.toggle('collapsed');
 }
 
-function sectionIsVisible(entries, observer) {
+function scroll() {
     const viewWindow = document.getElementById("sections");
-    const triggerTop = viewWindow.getBoundingClientRect().top;
-    const triggerBottom = triggerTop + viewWindow.getBoundingClientRect().height * 0.3;
+    const triggerDiff = 30; // Minimum scroll distance before doing something.
+    const scrollTimeOut = 100;
 
-    // Find the section that is in focus.
-    const sections = document.getElementsByClassName("section");
-    let focusSection = null;
-    for (let section of sections) {
-        if ((section.getBoundingClientRect().top >= triggerTop) &&
-            (section.getBoundingClientRect().top <= triggerBottom)) {
-            console.log("section = " + section.id);
-            focusSection = section;
-            break;
+    if (Math.abs(viewWindow.scrollTop - state.lastScrollPos) > triggerDiff) {
+        state.lastScrollPos = viewWindow.scrollTop;
+
+        window.clearTimeout(state.isScrolling);
+        state.isScrolling = setTimeout(scrollingStopped, scrollTimeOut);
+    }
+}
+
+function scrollingStopped() {
+    // Only update the menu item underline when the user scrolls.
+    // Do nothing if the scrolling happens because of .scrollIntoView().
+    if (!(state.scrollStartedByMenuClick)) {
+        const viewWindow = document.getElementById("sections");
+        const triggerTop = viewWindow.getBoundingClientRect().top;
+        const triggerBottom = triggerTop + viewWindow.getBoundingClientRect().height * 0.3;
+
+        // Find the section that is in focus.
+        const sections = document.getElementsByClassName("section");
+        let focusSection = null;
+        for (let section of sections) {
+            if ((section.getBoundingClientRect().top >= triggerTop) &&
+                (section.getBoundingClientRect().top <= triggerBottom)) {
+                focusSection = section;
+                break;
+            }
+        }
+
+        // Get the item of the horizontal and vertical menus corresponding to the section in focus.
+        if (!(focusSection == null)) {
+            let menuItems = [];
+            let menuItemIds = focusSection.getAttribute('data-menu-items');
+            for (let menuItemId of menuItemIds.split(" ")) {
+                menuItems.push(document.getElementById(menuItemId));
+            }
+            // Set underline at menu item in horizontal and vertical menus.
+            menuSetUnderline(menuItems);
         }
     }
-
-    // Get the item of the horizontal and vertical menus corresponding to the section in focus.
-    if (!(focusSection == null)) {
-        let menuItems = [];
-        let menuItemIds = focusSection.getAttribute('data-menu-items');
-        for (let menuItemId of menuItemIds.split(" ")) {
-            menuItems.push(document.getElementById(menuItemId));
-        }
-        // Set underline at menu item in horizontal and vertical menus.
-        menuSetUnderline(menuItems);
-    }
+    state.scrollStartedByMenuClick = false;
 }
 
 document.addEventListener('DOMContentLoaded', main);

@@ -1,76 +1,12 @@
-class Menu {
-
-    constructor(menuIds) {
-        this.activeMenuItems = [];
-        this.initialise(menuIds);
-    }
-
-    initialise(menuIds) {
-        let menuItems = [];
-        for (let menuId of menuIds) {
-            const menu = document.getElementById(menuId);
-            menuItems.push(menu.children[0]);
-        }
-        // Underline first menu entry in horizontal and vertical menus.
-        this.setUnderline(menuItems);
-    }
-
-    menuItemClick(event) {
-        let sectionId = null;
-        let menuItemIds = null;
-        let elem = event.target;
-        let menuItems = [];
-        // Traverse up the DOM tree to find which menu item was clicked
-        while (!(elem === null) && !(elem.tagName === "BODY")) {
-            if (elem.hasAttribute('data-section-id')) {
-                sectionId = elem.getAttribute('data-section-id');
-                menuItemIds = elem.getAttribute('data-menu-items');
-                break;
-            }
-            elem = elem.parentNode;
-        }
-        // Get the IDs of the selected item in horizontal and vertical menus.
-        if (menuItemIds) {
-            for (let menuItemId of menuItemIds.split(" ")) {
-                menuItems.push(document.getElementById(menuItemId));
-            }
-            // Scroll
-            document.getElementById(sectionId).scrollIntoView({behavior: "smooth"});
-            // Set underline at menu item in horizontal and vertical menus.
-            this.setUnderline(menuItems);
-        }
-    }
-
-    setUnderline(menuItems) {
-        // Remove underline from active menu item.
-        if (!(this.activeMenuItems === undefined || this.activeMenuItems.length === 0)) {
-            while (this.activeMenuItems.length > 0) {
-                let activeMenuItem = this.activeMenuItems.pop();
-                if (activeMenuItem.classList.contains("underlined")) {
-                    activeMenuItem.classList.remove("underlined");
-                }
-                if (activeMenuItem.classList.contains("underline-anchor")) {
-                    activeMenuItem.classList.remove("underline-anchor");
-                }
-            }
-        }
-        // Add underline to selected menu items.
-        for (let menuItem of menuItems) {
-            const menuItemText = document.getElementById(menuItem.id + "-text");
-            menuItemText.classList.add("underlined");
-            menuItemText.classList.add("underline-anchor");
-            // Save selected item as active item.
-            this.activeMenuItems.push(menuItemText);
-        }
-    }
-
+let state = {
+    activeMenuItems: [],
 }
 
 function main() {
     // Initialise horizontal and vertical menus.
-    const menus = new Menu(['menu-horiz', 'menu-vert']);
+    menuInitialise(['menu-horiz', 'menu-vert']);
     document.getElementById("header-box")
-        .addEventListener('click', menus.menuItemClick.bind(menus));
+        .addEventListener('click', menuItemClick);
     // Attach event function to menu icon (visible on narrow screens).
     document.getElementById('menu-icon')
         .addEventListener('click', menuIconClick);
@@ -83,13 +19,72 @@ function main() {
     observer.observe(document.getElementById("section-2"));
     observer.observe(document.getElementById("section-3"));
     observer.observe(document.getElementById("section-4"));
-    // Set up respons to media queries for window resizing.
+    // Set up response to media queries for window resizing.
     window.matchMedia('(min-width: 950px)')
         .addEventListener('change', toggleVerticalMenu);
     toggleVerticalMenu();
     // Scroll to top section.
     const sections = document.getElementById("sections");
     sections.scrollIntoView();
+}
+
+function menuInitialise(menuIds) {
+    let menuItems = [];
+    for (let menuId of menuIds) {
+        const menu = document.getElementById(menuId);
+        menuItems.push(menu.children[0]);
+    }
+    // Underline first menu entry in horizontal and vertical menus.
+    menuSetUnderline(menuItems);
+}
+
+function menuItemClick(event) {
+    let sectionId = null;
+    let menuItemIds = null;
+    let elem = event.target;
+    let menuItems = [];
+    // Traverse up the DOM tree to find which menu item was clicked
+    while (!(elem === null) && !(elem.tagName === "BODY")) {
+        if (elem.hasAttribute('data-section-id')) {
+            sectionId = elem.getAttribute('data-section-id');
+            menuItemIds = elem.getAttribute('data-menu-items');
+            break;
+        }
+        elem = elem.parentNode;
+    }
+    // Get the IDs of the selected item in horizontal and vertical menus.
+    if (menuItemIds) {
+        for (let menuItemId of menuItemIds.split(" ")) {
+            menuItems.push(document.getElementById(menuItemId));
+        }
+        // Scroll to selected section.
+        document.getElementById(sectionId).scrollIntoView({behavior: "smooth"});
+        // Set underline at menu item in horizontal and vertical menus.
+        menuSetUnderline(menuItems);
+    }
+}
+
+function menuSetUnderline(menuItems) {
+    // Remove underline from active menu item.
+    if (!(state.activeMenuItems === undefined || state.activeMenuItems.length === 0)) {
+        while (state.activeMenuItems.length > 0) {
+            let activeMenuItem = state.activeMenuItems.pop();
+            if (activeMenuItem.classList.contains("underlined")) {
+                activeMenuItem.classList.remove("underlined");
+            }
+            if (activeMenuItem.classList.contains("underline-anchor")) {
+                activeMenuItem.classList.remove("underline-anchor");
+            }
+        }
+    }
+    // Add underline to selected menu items.
+    for (let menuItem of menuItems) {
+        const menuItemText = document.getElementById(menuItem.id + "-text");
+        menuItemText.classList.add("underlined");
+        menuItemText.classList.add("underline-anchor");
+        // Save selected item as active item.
+        state.activeMenuItems.push(menuItemText);
+    }
 }
 
 function* range(start, stop, step) {
@@ -109,27 +104,33 @@ function menuIconClick(elem) {
     headerBottom.classList.toggle('collapsed');
 }
 
-// TODO:
-// - Intersection Observer API
-//   https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
-
 function sectionIsVisible(entries, observer) {
     const viewWindow = document.getElementById("sections");
-    const viewWindowTop = viewWindow.getBoundingClientRect().top;
-    const viewWindowHeight = viewWindow.getBoundingClientRect().height;
-    const viewWindowMiddle = viewWindowHeight / 2;
+    const triggerTop = viewWindow.getBoundingClientRect().top;
+    const triggerBottom = triggerTop + viewWindow.getBoundingClientRect().height * 0.3;
 
-    let sections = {};
-    entries.forEach(entry => {
-        let section = document.getElementById(entry.target.id);
-        let distance = viewWindowMiddle - section.getBoundingClientRect().top;
-        console.log(section.id + " = " + distance);
-        // if (distance >= 0 ) {
-        //     console.log(section.id + " = " + distance);
-        // }
-    })
-    // Object.keys(a).sort().reduce(function (entry, key) {entry[key] = a[key]; return entry;}, {});
-    console.log("---------------------------------");
+    // Find the section that is in focus.
+    const sections = document.getElementsByClassName("section");
+    let focusSection = null;
+    for (let section of sections) {
+        if ((section.getBoundingClientRect().top >= triggerTop) &&
+            (section.getBoundingClientRect().top <= triggerBottom)) {
+            console.log("section = " + section.id);
+            focusSection = section;
+            break;
+        }
+    }
+
+    // Get the item of the horizontal and vertical menus corresponding to the section in focus.
+    if (!(focusSection == null)) {
+        let menuItems = [];
+        let menuItemIds = focusSection.getAttribute('data-menu-items');
+        for (let menuItemId of menuItemIds.split(" ")) {
+            menuItems.push(document.getElementById(menuItemId));
+        }
+        // Set underline at menu item in horizontal and vertical menus.
+        menuSetUnderline(menuItems);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', main);

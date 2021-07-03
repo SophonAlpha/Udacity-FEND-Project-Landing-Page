@@ -3,12 +3,8 @@
 Research notes:
 ---------------
 
-- Highlight Current Page With HTML CSS JS | Show Active Link Or Menu
-  https://webdevtrick.com/highlight-current-page/
 - A Complete Guide to Flexbox
   https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-- Intersection Observer API
-  https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
 
 -->
 
@@ -41,78 +37,24 @@ Research notes:
 
     <header>
       <div id="header-box" class="header-box">
-        <div class="header-top">
-          <div class="header-top__logo">StayWell<span class="material-icons-outlined">
-            &thinsp;&#xeb4c;&thinsp;</span>Pharmacy
+        <div class="header">
+          <div class="box-horizontal--space-between">
+            <div id="header__logo" class="header__logo">StayWell<span class="material-icons-outlined">
+              &thinsp;&#xeb4c;&thinsp;</span>Pharmacy
+            </div>
+            <div class="header__menu-icon">
+              <span id="menu-icon" class="material-icons-outlined">&thinsp;&#xe5d2;</span>
+            </div>
           </div>
           <nav>
             <!-- Menu is visible when screen wide enough. Controlled with @media. -->
-            <ul id="menu-horiz" class="header-top__menu">
-              <li id="menu-horiz-item-1" data-section-id="section-1"
-                  data-menu-items="menu-horiz-item-1 menu-vert-item-1"
-                  class="header__menu-item">
-                <span id="menu-horiz-item-1-text">Welcome</span>
-              </li>
-              <li id="menu-horiz-item-2" data-section-id="section-2"
-                  data-menu-items="menu-horiz-item-2 menu-vert-item-2"
-                  class="header__menu-item">
-                <span id="menu-horiz-item-2-text">Our Stores</span>
-              </li>
-              <li id="menu-horiz-item-3" data-section-id="section-3"
-                  data-menu-items="menu-horiz-item-3 menu-vert-item-3"
-                  class="header__menu-item">
-                <span id="menu-horiz-item-3-text">Home Delivery</span>
-              </li>
-              <li id="menu-horiz-item-4" data-section-id="section-4"
-                  data-menu-items="menu-horiz-item-4 menu-vert-item-4"
-                  class="header__menu-item">
-                <span id="menu-horiz-item-4-text">Products</span>
-              </li>
-              <li id="menu-horiz-item-5" data-section-id="section-5"
-                  data-menu-items="menu-horiz-item-5 menu-vert-item-5"
-                  class="header__menu-item">
-                <span id="menu-horiz-item-5-text">Contact</span>
-              </li>
+            <ul id="menu" class="header__menu">
+              <!--
+                Menu will be built by JavaScript based on sections in this HTML file.
+              -->
             </ul>
-            <!-- On narrow screens show menu icon. -->
-            <div class="header-top__menu-icon">
-              <span id="menu-icon" class="material-icons-outlined">&thinsp;&#xe5d2;</span>
-            </div>
+            </ul>
           </nav>
-        </div>
-        <!-- Vertical menu. Shown at narrow widths.-->
-        <div id="header-bottom" class="header-bottom collapsed">
-          <div>
-            <nav>
-              <ul id="menu-vert" class="header-bottom__menu">
-                <li id="menu-vert-item-1" data-section-id="section-1"
-                    data-menu-items="menu-horiz-item-1 menu-vert-item-1"
-                    class="header__menu-item">
-                  <span id="menu-vert-item-1-text">Welcome</span>
-                </li>
-                <li id="menu-vert-item-2" data-section-id="section-2"
-                    data-menu-items="menu-horiz-item-2 menu-vert-item-2"
-                    class="header__menu-item">
-                  <span id="menu-vert-item-2-text">Our Stores</span>
-                </li>
-                <li id="menu-vert-item-3" data-section-id="section-3"
-                    data-menu-items="menu-horiz-item-3 menu-vert-item-3"
-                    class="header__menu-item">
-                  <span id="menu-vert-item-3-text">Home Delivery</span>
-                </li>
-                <li id="menu-vert-item-4" data-section-id="section-4"
-                    data-menu-items="menu-horiz-item-4 menu-vert-item-4"
-                    class="header__menu-item">
-                  <span id="menu-vert-item-4-text">Products</span>
-                </li>
-                <li id="menu-vert-item-5" data-section-id="section-5"
-                    data-menu-items="menu-horiz-item-5 menu-vert-item-5"
-                    class="header__menu-item">
-                  <span id="menu-vert-item-5-text">Contact</span>
-                </li>
-              </ul>
-            </nav>
-          </div>
         </div>
       </div>
     </header>
@@ -121,7 +63,6 @@ Research notes:
 
       <div>
         <section id="section-1" class="section"
-                 data-menu-items="menu-horiz-item-1 menu-vert-item-1"
                  data-menu-item-text="Welcome">
           <div class="section-content">
             <h1 class="section__heading">Welcome to StayWell Pharmacy</h1>
@@ -148,7 +89,6 @@ Research notes:
         </section>
 
         <section id="section-2" class="section"
-                 data-menu-items="menu-horiz-item-2 menu-vert-item-2"
                  data-menu-item-text="Our Stores">
           <div class="section-content">
             <h1 class="section__heading">Our Stores</h1>
@@ -170,7 +110,6 @@ Research notes:
         </section>
 
         <section id="section-3" class="section"
-                 data-menu-items="menu-horiz-item-3 menu-vert-item-3"
                  data-menu-item-text="Home Delivery">
           <div class="section-content">
             <h1 class="section__heading">Home Delivery</h1>
@@ -192,7 +131,6 @@ Research notes:
         </section>
 
         <section id="section-4" class="section"
-                 data-menu-items="menu-horiz-item-4 menu-vert-item-4"
                  data-menu-item-text="Products">
           <div class="section-content">
             <h1 class="section__heading">Products</h1>
@@ -214,7 +152,6 @@ Research notes:
         </section>
 
         <section id="section-5" class="section"
-                 data-menu-items="menu-horiz-item-5 menu-vert-item-5"
                  data-menu-item-text="Contact">
           <div class="section-content">
             <h1 class="section__heading">Contact</h1>

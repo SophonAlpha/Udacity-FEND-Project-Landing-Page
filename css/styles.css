@@ -4,7 +4,7 @@ body {
   margin: 0;
 }
 
-.box-horizontal--space-between {
+.horizontal-box--space-between {
   display: flex;
   flex-direction: row;
   overflow: hidden;

@@ -1,14 +1,14 @@
+// A collection of global variables.
 let state = {
     activeMenuItem: [],
     lastScrollPos: 0,
-    isScrolling: null,
+    scrollTimeoutId: null,
     sectionsElem: null,
     scrollStartedByMenuClick: false,
 }
 
 function main() {
-
-    // Build horizontal and vertical menus based on sections in the document.
+    // Add menu items based on sections in the document.
     buildMenu();
     document.getElementById('header-box')
         .addEventListener('click', menuItemClick);
@@ -22,12 +22,7 @@ function main() {
     state.sectionsElem.addEventListener('scroll', scroll);
 
     // Set up response to media queries for window resizing.
-    //
-    // Note: The menu items are dynamically added based on the sections in the HTML page.
-    // We need to wait for the browser reflow and repaint to complete before we can query
-    // the width of the menu bar. If we don't do this .getBoundingClientRect() will report
-    // 0's for widths and heights
-    window.requestAnimationFrame(updateMediaQuery);
+    updateMediaQuery();
 
     // Scroll to top section.
     const sections = document.getElementById('sections');
@@ -43,7 +38,7 @@ function buildMenu() {
         let sectionId = section.id
         let menuText = section.getAttribute('data-menu-item-text');
         let elem = document.createElement('DIV');
-        // Add menu item to horizontal and vertical menus.
+        // Add menu item to menu.
         elem.innerHTML =
             `<li id="${menuId}-${sectionId}" data-section-id="${sectionId}" ` +
             `class="header__menu-item"> ` +
@@ -57,28 +52,7 @@ function buildMenu() {
 }
 
 function updateMediaQuery() {
-    // console.log(document.getElementById('menu').getBoundingClientRect().width);
-    // console.log(document.getElementById('header__logo').getBoundingClientRect().width);
-    // const triggerWidth = document.getElementById('menu')
-    //         .getBoundingClientRect().width +
-    //     document.getElementById('header__logo')
-    //         .getBoundingClientRect().width + 70;
-    // console.log('triggerWidth = ' + triggerWidth);
-    // // Add media rule.
-    // const mediaRule = '' +
-    //     `@media screen and (min-width: ${triggerWidth}px) {` +
-    //     '  .header__menu {' +
-    //     '    visibility: visible;' +
-    //     '  }' +
-    //     '  .header__menu-icon {' +
-    //     '    display: none;' +
-    //     '  }' +
-    //     '}';
-    // const style = document.createElement('style');
-    // document.head.appendChild(style);
-    // style.sheet.insertRule(mediaRule);
-    // Attache event handler to toggle horizontal or vertical menu.
-    window.matchMedia(`(min-width: ${950}px)`)
+    window.matchMedia(`(min-width: 950px)`)
         .addEventListener('change', toggleVerticalMenu);
     toggleVerticalMenu();
 }
@@ -98,7 +72,7 @@ function menuItemClick(event) {
         elem = elem.parentNode;
     }
 
-    // Get the IDs of the selected item in horizontal and vertical menus.
+    // Get the ID of the selected menu item.
     if (menuItem) {
         // Scroll to selected section.
         state.scrollStartedByMenuClick = true;
@@ -121,7 +95,7 @@ function menuSetUnderline(menuItem) {
             }
         }
     }
-    // Add underline to selected menu items.
+    // Add underline to selected menu item.
     const menuItemText = document.getElementById(menuItem.id + '-text');
     menuItemText.classList.add('underlined');
     menuItemText.classList.add('underline-anchor');
@@ -130,12 +104,14 @@ function menuSetUnderline(menuItem) {
 }
 
 function toggleVerticalMenu() {
-    // Toggle the vertical menu whenever a media query resize event fires.
+    // Toggle the vertical menu when a media query resize event fires.
     const header = document.getElementById('menu');
     if (window.innerWidth > 950 && header.classList.contains('header__menu--display-none')) {
+        // On wide screens display the menu.
         header.classList.remove('header__menu--display-none');
     }
     if (window.innerWidth <= 950 && !(header.classList.contains('header__menu--display-none'))) {
+        // On narrow screens display the menu icon (click on the icon will unfold the menu).
         header.classList.add('header__menu--display-none');
     }
 }
@@ -148,19 +124,24 @@ function menuIconClick() {
 function scroll() {
     const viewWindow = document.getElementById('sections');
     const triggerDiff = 30; // Minimum scroll distance before doing something.
-    const scrollTimeOut = 100;
+    const scrollTimeOut = 50;
 
+    // To reduce performance load, we only do something when a minimum scroll
+    // distance has been covered.
     if (Math.abs(viewWindow.scrollTop - state.lastScrollPos) > triggerDiff) {
         state.lastScrollPos = viewWindow.scrollTop;
 
-        window.clearTimeout(state.isScrolling);
-        state.isScrolling = setTimeout(scrollingStopped, scrollTimeOut);
+        // We wait a bit after scrolling has stopped before doing updates.
+        window.clearTimeout(state.scrollTimeoutId);
+        state.scrollTimeoutId = setTimeout(scrollingStopped, scrollTimeOut);
     }
 }
 
 function scrollingStopped() {
     // Only update the menu item underline when the user scrolls.
     // Do nothing if the scrolling happens because of .scrollIntoView().
+    // This is necessary to prevent the odd effect that the underline
+    // steps through all menu items when calling .scrollIntoView().
     if (!(state.scrollStartedByMenuClick)) {
         const viewWindow = document.getElementById('sections');
         const triggerTop = viewWindow.getBoundingClientRect().top;
@@ -177,18 +158,15 @@ function scrollingStopped() {
             }
         }
 
-        // Get the item of the horizontal and vertical menus corresponding to the section in focus.
+        // Get the item of the menu corresponding to the section in focus.
         if (!(focusSection == null)) {
-            let menuItems = [];
-            let menuItemIds = focusSection.getAttribute('data-menu-items');
-            for (let menuItemId of menuItemIds.split(' ')) {
-                menuItems.push(document.getElementById(menuItemId));
-            }
-            // Set underline at menu item in horizontal and vertical menus.
-            menuSetUnderline(menuItems);
+            let menuItem = document.getElementById(`menu-${focusSection.id}`);
+            // Set underline at menu item.
+            menuSetUnderline(menuItem);
         }
     }
     state.scrollStartedByMenuClick = false;
 }
 
+// It all starts here.
 document.addEventListener('DOMContentLoaded', main);
